@@ -20,8 +20,8 @@ interface cloudinaryUploadResult{
 }
 
 
-export async function POST(request: NextRequest){
-    const {userId} = auth();
+export async function POST (request: NextRequest){
+    const {userId} = await auth();
     
     try {
             
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest){
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     if(!file){
-            return NextResponse.json({error: "File not found"}, {status: 400});
+            return NextResponse.json({error: "File not found"}, {status: 400});}
             const bytes = await file.arrayBuffer()
             const buffer = Buffer.from(bytes);
 
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest){
             )
             return NextResponse.json({publicId: result.public_id}, {status: 200});
         }
-    } catch (error) {
+    catch (error) {
         console.log("Upload image failed")
         return NextResponse.json({error:"Image upload failed"}, {status: 500})
     }
