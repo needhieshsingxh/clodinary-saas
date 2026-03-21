@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cloudinary SaaS Toolkit
 
-## Getting Started
+A Next.js 16 SaaS-style media app with Clerk authentication, Cloudinary image/video processing, and Prisma + PostgreSQL persistence for uploaded video metadata.
 
-First, run the development server:
+## What This Project Is
+
+This app provides:
+
+- Public landing page with Sign In and Sign Up actions.
+- Protected dashboard after login.
+- Social Share tool to upload and resize images for social media formats.
+- Video Upload tool to upload/compress videos and store metadata in PostgreSQL.
+- Video listing endpoint for fetched uploads.
+
+## Tech Stack
+
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Clerk for authentication
+- Cloudinary for media upload/transformation
+- Prisma ORM with PostgreSQL
+- Tailwind CSS v4 + DaisyUI
+
+## Project Structure
+
+```text
+.
+|-- app/
+|   |-- page.tsx                         # Landing page
+|   |-- layout.tsx                       # Root layout + ClerkProvider + header
+|   |-- (auth)/
+|   |   |-- sign-in/[[...sign-in]]/page.tsx
+|   |   `-- sign-up/[[...sign-up]]/page.tsx
+|   |-- (app)/
+|   |   |-- dashboard/page.tsx           # Authenticated dashboard
+|   |   |-- social-share/page.tsx        # Image resize tool
+|   |   |-- video-upload/page.tsx        # Video upload/compress tool
+|   |   `-- home/page.tsx                # Video listing UI
+|   |-- api/
+|   |   |-- image-upload/route.ts        # Image upload endpoint
+|   |   |-- video-upload/route.ts        # Video upload endpoint
+|   |   `-- videos/route.ts              # List videos endpoint
+|   `-- generated/prisma/                # Generated Prisma client output
+|-- components/
+|   `-- VideoCard.tsx
+|-- lib/
+|   `-- prisma.ts                        # Prisma client singleton
+|-- prisma/
+|   |-- schema.prisma
+|   `-- migrations/
+|-- proxy.ts                             # Clerk middleware + route protection
+`-- README.md
+```
+
+## Authentication and Routing Flow
+
+- Public routes: `/`, `/sign-in`, `/sign-up`
+- Protected app routes: `/dashboard`, `/social-share`, `/video-upload`, `/home`
+- If not signed in and visiting a protected page route, user is redirected to `/sign-in`.
+- If signed in and visiting public auth pages, user is redirected to `/dashboard`.
+
+## Environment Variables
+
+Create a `.env.local` file in the project root and add:
+
+```bash
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+
+# Database
+DATABASE_URL=
+
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+Notes:
+
+- `DATABASE_URL` must point to a PostgreSQL database.
+- Clerk keys come from your Clerk dashboard.
+- Cloudinary keys come from your Cloudinary console.
+
+## How To Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Configure environment variables in `.env.local`.
+
+3. Run database migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+4. (Optional) regenerate Prisma client if needed:
+
+```bash
+npx prisma generate
+```
+
+5. Start development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Useful Scripts
 
-## Learn More
+- `npm run dev` - start local dev server
+- `npm run build` - production build
+- `npm run start` - run production build locally
+- `npm run lint` - run ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## API Endpoints (Current)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `POST /api/image-upload` - upload image to Cloudinary (auth required)
+- `POST /api/video-upload` - upload/compress video + save metadata (currently protected by middleware)
+- `GET /api/videos` - fetch stored videos (public)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Troubleshooting
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- If auth redirects do not behave as expected, verify Clerk keys and middleware settings in `proxy.ts`.
+- If uploads fail, verify all Cloudinary env variables are set.
+- If Prisma errors occur, verify `DATABASE_URL` and rerun `npx prisma migrate dev`.

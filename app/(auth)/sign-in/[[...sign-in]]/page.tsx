@@ -1,5 +1,9 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignIn } from "@clerk/nextjs";
 
 export default function Page() {
-  return <SignIn />
+  return (
+    <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8">
+      <SignIn forceRedirectUrl="/dashboard" />
+    </main>
+  );
 }
