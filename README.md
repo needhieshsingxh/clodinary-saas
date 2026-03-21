@@ -2,6 +2,13 @@
 
 A Next.js 16 SaaS-style media app with Clerk authentication, Cloudinary image/video processing, and Prisma + PostgreSQL persistence for uploaded video metadata.
 
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/424ccca7-2a63-45b9-ab42-ad2223593c8e" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/a92b7b7b-f816-47a8-a4b1-a9d4426c2f94" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f9463967-a7e9-4035-a976-f5a543705707" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/81cd6095-6cf8-44ec-a514-981fc55be3a1" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/71b018bc-5fed-437d-93a9-cd7c9f7c3b7f" />
+
+
 ## What This Project Is
 
 This app provides:
